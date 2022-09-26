@@ -1,0 +1,41 @@
+#importamos tensorflow para manejar tensores y numpy para manejar arreglos de modo mas simple
+import tensorflow as tf 
+import numpy as np
+
+#Estos son nuesetros valores de entrada y salida (esperados), tambien llamados vectores
+#np es por que estamos usando la libreria numpy np.array es un arreglo manejado mediante numpy
+#dtype es el tipo de dato que es cada entrada de los vectores
+celsius = np.array([-40,-10,0,8,15,22,38], dtype=float)
+farenheit = np.array([-40, 14, 32, 46, 59, 72, 100], dtype=float)
+
+#Aqui la capa que usaremos va a ser una capa densa la cuál conecta la neurona de entrada con todas las neuronas de salida, en unidades es 1 neurona y de entrada una neurona tambien
+#El modelo que usaremos es un modelo secuencial de keras, al igual que la capa
+
+capa = tf.keras.layers.Dense(units=1, input_shape=[1])
+modelo = tf.keras.Sequential([capa])
+
+
+#Definimos el modelo que va a compilar con un optimizador, en este caso es Adam, con una perdida cuadrada promedio, tipicamente usada en estadistica
+#el valor que le damos a Adam es basicamente el paso que debera seguir, para llegar al error cuadratico medio.
+
+modelo.compile(
+    optimizer=tf.keras.optimizers.Adam(0.1),
+    loss='mean_squared_error'
+)
+
+#definimos al historial para ver la evolución del ajuste entre celsius y farenheit 
+#epochs es el numero de vueltas que le va a dar al modelo
+#Verbose = False es que no nos muestre el resultado de cada una de las vueltas
+print("Comenzando entrenamiento")
+historial = modelo.fit(celsius, farenheit, epochs=1000, verbose= False)
+print("Modelo entrenado!")
+
+
+#Hagamos una prueba con nuestra predicción
+print("Hagamos una predicción:")
+prueba = float(input("Ingrese la temperatura en grados Celsius: "))
+resultado = modelo.predict([prueba])
+print("El resultado es: " +str(resultado)+ "Fahrenheit")
+
+
+
